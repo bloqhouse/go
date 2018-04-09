@@ -105,6 +105,26 @@ func (q *OperationsQ) ForTransaction(hash string) *OperationsQ {
 	return q
 }
 
+// ForAsset filters the query to a only operations for a specific asset,
+// specified by the the asset code and the asset issuer address.
+func (q *OperationsQ) ForAsset(assetCode string, assetIssuer string) *OperationsQ {
+	// query := q.parent.Operations()
+	// query.sql = query.sql.Where()
+	q.sql = q.sql.Where(
+		"hop.details @> json_object(ARRAY['asset_code', ? ,'asset_issuer', ? ])::jsonb"+
+			" OR hop.details @> json_object(ARRAY['buying_asset_code', ? ,'buying_asset_issuer', ? ])::jsonb"+
+			" OR hop.details @> json_object(ARRAY['selling_asset_code', ? ,'selling_asset_issuer', ? ])::jsonb",
+		assetCode,
+		assetIssuer,
+		assetCode,
+		assetIssuer,
+		assetCode,
+		assetIssuer,
+	)
+
+	return q
+}
+
 // OnlyPayments filters the query being built to only include operations that
 // are in the "payment" class of operations:  CreateAccountOps, Payments, and
 // PathPayments.
