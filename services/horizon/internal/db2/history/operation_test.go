@@ -46,6 +46,26 @@ func TestOperationQueries(t *testing.T) {
 		tt.Assert.Len(ops, 1)
 	}
 
+	// asset filter works
+	tt.Scenario("non_native_payment")
+	assetCode := "USD"
+	assetIssuer := "GC23QF2HUE52AMXUFUH3AYJAXXGXXV2VHXYYR6EYXETPKDXZSAW67XO4"
+	ops = []Operation{}
+	err = q.Operations().ForAsset(assetCode, assetIssuer).Select(&ops)
+
+	if tt.Assert.NoError(err) {
+		tt.Assert.Len(ops, 4)
+	}
+
+	assetCodeXXX := "XXX"
+	assetIssuerXXX := "XXX"
+	ops = []Operation{}
+	err = q.Operations().ForAsset(assetCodeXXX, assetIssuerXXX).Select(&ops)
+
+	if tt.Assert.NoError(err) {
+		tt.Assert.Len(ops, 0)
+	}
+
 	// payment filter works
 	tt.Scenario("pathed_payment")
 	ops = []Operation{}
