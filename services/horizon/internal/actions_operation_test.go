@@ -72,6 +72,19 @@ func TestOperationActions_Index(t *testing.T) {
 	// missing ledger
 	w = ht.Get("/ledgers/100/operations")
 	ht.Assert.Equal(404, w.Code)
+
+	// filtered by asset
+	test.LoadScenario("non_native_payment")
+	w = ht.Get("/operations/USD/GC23QF2HUE52AMXUFUH3AYJAXXGXXV2VHXYYR6EYXETPKDXZSAW67XO4")
+	if ht.Assert.Equal(200, w.Code) {
+		ht.Assert.PageOf(4, w.Body)
+	}
+
+	// asset not existing
+	w = ht.Get("/operations/XXX/XXX")
+	if ht.Assert.Equal(200, w.Code) {
+		ht.Assert.PageOf(0, w.Body)
+	}
 }
 
 func TestOperationActions_Show(t *testing.T) {
