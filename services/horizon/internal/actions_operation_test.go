@@ -75,13 +75,26 @@ func TestOperationActions_Index(t *testing.T) {
 
 	// filtered by asset
 	test.LoadScenario("non_native_payment")
-	w = ht.Get("/operations/USD/GC23QF2HUE52AMXUFUH3AYJAXXGXXV2VHXYYR6EYXETPKDXZSAW67XO4")
+	w = ht.Get("/operations/assets/GC23QF2HUE52AMXUFUH3AYJAXXGXXV2VHXYYR6EYXETPKDXZSAW67XO4/USD")
 	if ht.Assert.Equal(200, w.Code) {
 		ht.Assert.PageOf(4, w.Body)
 	}
 
 	// asset not existing
-	w = ht.Get("/operations/XXX/XXX")
+	w = ht.Get("/operations/assets/XXX/XXX")
+	if ht.Assert.Equal(200, w.Code) {
+		ht.Assert.PageOf(0, w.Body)
+	}
+
+	// filtered by issuer
+	test.LoadScenario("non_native_payment")
+	w = ht.Get("/operations/assets/GC23QF2HUE52AMXUFUH3AYJAXXGXXV2VHXYYR6EYXETPKDXZSAW67XO4")
+	if ht.Assert.Equal(200, w.Code) {
+		ht.Assert.PageOf(4, w.Body)
+	}
+
+	// issuer not existing
+	w = ht.Get("/operations/assets/XXX")
 	if ht.Assert.Equal(200, w.Code) {
 		ht.Assert.PageOf(0, w.Body)
 	}

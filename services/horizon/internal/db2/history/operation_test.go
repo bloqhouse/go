@@ -51,7 +51,7 @@ func TestOperationQueries(t *testing.T) {
 	assetCode := "USD"
 	assetIssuer := "GC23QF2HUE52AMXUFUH3AYJAXXGXXV2VHXYYR6EYXETPKDXZSAW67XO4"
 	ops = []Operation{}
-	err = q.Operations().ForAsset(assetCode, assetIssuer).Select(&ops)
+	err = q.Operations().ForAsset(assetIssuer, assetCode).Select(&ops)
 
 	if tt.Assert.NoError(err) {
 		tt.Assert.Len(ops, 4)
@@ -60,7 +60,25 @@ func TestOperationQueries(t *testing.T) {
 	assetCodeXXX := "XXX"
 	assetIssuerXXX := "XXX"
 	ops = []Operation{}
-	err = q.Operations().ForAsset(assetCodeXXX, assetIssuerXXX).Select(&ops)
+	err = q.Operations().ForAsset(assetIssuerXXX, assetCodeXXX).Select(&ops)
+
+	if tt.Assert.NoError(err) {
+		tt.Assert.Len(ops, 0)
+	}
+
+	// issuer filter works
+	tt.Scenario("non_native_payment")
+	assetIssuer = "GC23QF2HUE52AMXUFUH3AYJAXXGXXV2VHXYYR6EYXETPKDXZSAW67XO4"
+	ops = []Operation{}
+	err = q.Operations().ForIssuer(assetIssuer).Select(&ops)
+
+	if tt.Assert.NoError(err) {
+		tt.Assert.Len(ops, 4)
+	}
+
+	assetIssuerXXX = "XXX"
+	ops = []Operation{}
+	err = q.Operations().ForIssuer(assetIssuerXXX).Select(&ops)
 
 	if tt.Assert.NoError(err) {
 		tt.Assert.Len(ops, 0)

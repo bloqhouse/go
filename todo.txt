@@ -1,0 +1,9 @@
+change:
+- `r.Get("/operations/assets/:asset_issuer/:asset_code", &OperationIndexAction{})`
+
+implement:
+- r.Get("/operations/assets/:asset_issuer", &OperationIndexAction{})
+
+nice 2 have:
+- /assets/trustlines ?
+
