@@ -110,7 +110,9 @@ func (action *OperationIndexAction) loadRecords() {
 	case action.TransactionFilter != "":
 		ops.ForTransaction(action.TransactionFilter)
 	case action.AssetCodeFilter != "" && action.AssetIssuerFilter != "":
-		ops.ForAsset(action.AssetCodeFilter, action.AssetIssuerFilter)
+		ops.ForAsset(action.AssetIssuerFilter, action.AssetCodeFilter)
+	case action.AssetIssuerFilter != "":
+		ops.ForIssuer(action.AssetIssuerFilter)
 	}
 
 	action.Err = ops.Page(action.PagingParams).Select(&action.Records)
